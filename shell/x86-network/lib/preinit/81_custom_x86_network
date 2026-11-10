@@ -1,0 +1,11 @@
+#!/bin/sh
+# 80_mount_root 已恢复 sysupgrade 备份；此时尚未生成首次启动的 network。
+custom_x86_check_preserved_network() {
+    if [ -s /etc/config/network ]; then
+        touch /tmp/custom-x86-network-preserved
+    else
+        rm -f /tmp/custom-x86-network-preserved
+    fi
+}
+
+boot_hook_add preinit_main custom_x86_check_preserved_network

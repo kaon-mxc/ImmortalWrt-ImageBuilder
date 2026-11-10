@@ -2,6 +2,8 @@
 # Log file for debugging
 # 目前支持少部分第三方软件apk 通过打开shell/apk-custom-packages.sh的注释来集成
 source shell/apk-custom-packages.sh
+# 此分支的 x86 25.12 固件使用固定 PCI 网口布局；shell 目录已由工作流挂载。
+cp -a shell/x86-network/. files/ || exit 1
 echo "第三方apk软件包: $CUSTOM_PACKAGES"
 LOGFILE="/tmp/uci-defaults-log.txt"
 echo "Starting 99-custom.sh at $(date)" >> $LOGFILE

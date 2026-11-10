@@ -1,0 +1,32 @@
+#!/bin/sh
+. /lib/functions/uci-defaults.sh
+. /lib/functions/custom-x86-network.sh
+
+board_config_update
+
+# 替换默认网口定义，避免旧 ports 数组与专用端口列表合并。
+# jshn 的 json_add_object 会追加根键；重复键会让 json_dump 再次遍历
+# 已被分词的子对象，丢失第二个及后续端口，因此保留唯一的根键列表。
+json_get_keys root_keys
+for section in network_device network; do
+    case " $root_keys " in
+        *" $section "*) ;;
+        *) root_keys="$root_keys $section" ;;
+    esac
+    json_add_object "$section"
+    json_close_object
+done
+export "${JSON_PREFIX}K_J_V=$root_keys"
+
+while read -r name pci driver; do
+    if path=$(custom_x86_device_path "$pci" "$driver"); then
+        ucidef_set_network_device_path "$name" "$path"
+    else
+        echo "custom-x86-network: cannot identify $name ($pci, $driver); no fallback port will be used." >&2
+    fi
+done <<EOF
+$(custom_x86_port_map)
+EOF
+
+ucidef_set_interfaces_lan_wan 'lan1 lan2 lan3 lan4' 'wan0'
+board_config_flush
