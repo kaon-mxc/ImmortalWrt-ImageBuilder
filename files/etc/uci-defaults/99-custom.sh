@@ -134,11 +134,11 @@ fi
 
 fi # 通用网口配置；专用 x86 配置由 custom_x86_configure_network 处理
 
-# 设置所有网口可访问网页终端
-uci delete ttyd.@ttyd[0].interface
+# 网页终端绑定逻辑 LAN，涵盖 br-lan 中的所有物理 LAN 口。
+uci set ttyd.@ttyd[0].interface='@lan'
 
-# 设置所有网口可连接 SSH
-uci set dropbear.@dropbear[0].Interface=''
+# SSH 仅监听 LAN，恢复 ImmortalWrt 官方默认范围。
+uci set dropbear.@dropbear[0].Interface='lan'
 uci commit
 
 # 设置编译作者信息

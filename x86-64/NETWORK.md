@@ -14,6 +14,8 @@
 
 首次安装或恢复出厂时，LAN 使用 Actions 输入的管理 IP 和 `/24` 掩码（无输入文件时为 `10.0.0.1`），WAN 使用 DHCP 或 Actions 指定的 PPPoE。保留配置升级时，会迁移 WAN 和 LAN 的物理绑定，保留已有 IP、拨号参数及 `wan6` 的 `@wan` 引用。WAN 防火墙区域按名称查找，入站策略设为 `REJECT`。
 
+SSH 的 `Interface` 设为 `lan`，网页终端 ttyd 的 `interface` 设为 `@lan`。两者通过逻辑 LAN 绑定到 `br-lan`，四个 LAN 口均可管理设备，WAN 不监听这些管理服务；首次安装及保留配置升级都会应用此设置。
+
 网络配置由首次启动脚本写入，日常重启只执行固定命名。普通接口角色修改可在 LuCI 中进行；重新刷入本固件会再次应用上述默认物理绑定。PCI 插槽、BIOS 拓扑或直通地址变化时，需要更新 `custom_x86_port_map`，不能把此固件的专用布局直接用于其他机器。
 
 刷机后可以用 `ethtool -i wan0` 确认 `r8127` / `0000:02:00.0`，用 `uci show network` 和 `bridge link` 检查四个 LAN 成员。当前映射基于已提供的硬件信息，仍需在实机上验证。
