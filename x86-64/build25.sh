@@ -49,6 +49,8 @@ PACKAGES=""
 PACKAGES="$PACKAGES curl"
 # Mellanox ConnectX-4 及更新网卡的以太网驱动，依赖由 ImageBuilder 自动安装
 PACKAGES="$PACKAGES kmod-mlx5-core"
+# Realtek RTL8127 万兆网卡驱动
+PACKAGES="$PACKAGES kmod-r8127"
 PACKAGES="$PACKAGES luci-i18n-diskman-zh-cn"
 PACKAGES="$PACKAGES luci-i18n-firewall-zh-cn"
 PACKAGES="$PACKAGES luci-theme-argon"
